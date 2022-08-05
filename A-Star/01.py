@@ -1,3 +1,5 @@
+from ast import Lambda
+import re
 from turtle import width
 import pygame
 import math
@@ -71,20 +73,16 @@ class Node:
 
     def update_neig(self, grid):
         self.neighbors = []
-        if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].is_barrier():
-            # if i can move down
+        if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].is_barrier(): # DOWN
             self.neighbors.append(grid[self.row + 1][self.col])
 
-        if self.row > 0 and not grid[self.row - 1][self.col].is_barrier():
-            # if i can move up
+        if self.row > 0 and not grid[self.row - 1][self.col].is_barrier(): # UP
             self.neighbors.append(grid[self.row - 1][self.col])
 
-        if self.col < self.total_rows - 1 and not grid[self.row][self.col + 1].is_barrier():
-            # if i can move right
+        if self.col < self.total_rows - 1 and not grid[self.row][self.col + 1].is_barrier(): # RIGHT
             self.neighbors.append(grid[self.row][self.col + 1])
 
-        if self.row > 0 and not grid[self.row][self.col - 1].is_barrier():
-            # if i can move left
+        if self.col > 0 and not grid[self.row][self.col - 1].is_barrier(): # LEFT
             self.neighbors.append(grid[self.row][self.col - 1])
 
     def __lt__(self, other):
@@ -94,6 +92,63 @@ def h(p1, p2):
     x1, y1 = p1
     x2, y2 = p2
     return abs(x1 - x2) + abs(y1 - y2)
+
+def rebuild_path(came_from, current, draw):
+    while current in came_from:
+        current = came_from[current]
+        current.make_path()
+        draw()
+
+
+def algorithm(draw, grid, start, end):
+    draw()
+    count = 0
+    open_set = PriorityQueue()
+    open_set.put((0, count, start))
+    came_from = {}
+    g_score = {node: float("inf") for row in grid for node in row}
+    g_score[start] = 0
+
+    f_score = {node: float("inf") for row in grid for node in row}
+    f_score[start] = h(start.get_pos(), end.get_pos())
+
+    open_set_hash = {start}
+
+    while not open_set.empty():
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+        current = open_set.get()[2]
+        open_set_hash.remove(current)
+
+        if current == end:
+            rebuild_path(came_from, end, draw)
+            end.make_end()
+            return True
+
+        for nei in current.neighbors:
+            temp_g_score = g_score[current] + 1
+            
+            if temp_g_score < g_score[nei]:
+                came_from[nei] = current
+                g_score[nei] = temp_g_score
+                f_score[nei] = temp_g_score + h(nei.get_pos(), end.get_pos())
+
+                if nei not in open_set_hash:
+                    count += 1
+                    open_set.put((f_score[nei], count, nei))
+                    open_set_hash.add(nei)
+                    nei.make_open()
+        
+        draw()
+
+        if current != start:
+            current.make_closed()
+    return False
+
+
+
 
 def make_grid(rows, width):
     grid = []
@@ -178,7 +233,15 @@ def main(win, width):
 
             if e.type == pygame.KEYDOWN:
                 if e.key == pygame.K_SPACE and not started:
-                    pass
+                    for row in grid:
+                        for node in row:
+                            node.update_neig(grid)
+                    algorithm(lambda: draw(win, grid, ROWS, width), grid, start, end)
+                if e.key == pygame.K_c:
+                    win.fill(WHITE)
+                    start = None
+                    end = None
+                    grid = make_grid(ROWS, width)
 
     pygame.quit()
 
