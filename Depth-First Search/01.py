@@ -110,58 +110,7 @@ def wait():
         
 
 def algorithm(draw, grid, start, end):
-    # pseudocode https://en.wikipedia.org/wiki/A*_search_algorithm#:~:text=x).-,Pseudocode,-%5Bedit%5D
-    draw()
-    count = 0
-    open_set = PriorityQueue()
-    open_set.put((0, count, start))
-    came_from = {}
-    g_score = {node: float("inf") for row in grid for node in row}
-    g_score[start] = 0
-
-    f_score = {node: float("inf") for row in grid for node in row}
-    f_score[start] = h(start.get_pos(), end.get_pos())
-
-    open_set_hash = {start}
-
-    ite_count = 0
-
-    while not open_set.empty():
-        print("\n" + "-" * 20 + "iteration: " + str(ite_count) + "-" * 20 + "\n")
-        #wait()
-        current = open_set.get()[2]
-        open_set_hash.remove(current)
-
-        if current == end:
-            rebuild_path(came_from, end, draw)
-            return True
-
-        for nei in current.neighbors:
-            print("\nROW:COL : " + str(nei.row) + ":" + str(nei.col))
-            temp_g_score = g_score[current] + 1
-            print("temp_g_score: " + str(temp_g_score))
-            print("g_score[nei]: " + str(g_score[nei]))
-            if temp_g_score < g_score[nei]:
-                came_from[nei] = current
-                g_score[nei] = temp_g_score
-                f_score[nei] = temp_g_score + h(nei.get_pos(), end.get_pos())
-                print("\ttemp_g_score < g_score[nei]")
-                print("\th(nei.get_pos(), end.get_pos()): " + str(h(nei.get_pos(), end.get_pos())))
-                print("\tg_score[nei]: " + str(g_score[nei]))
-                print("\tf_score[nei]: " + str(f_score[nei]))
-                if nei not in open_set_hash:
-                    print("\t\tnei not in open_set_hash")
-                    count += 1
-                    open_set.put((f_score[nei], count, nei))
-                    open_set_hash.add(nei)
-                    nei.make_open()
-                    print("\t\tmade nei open")
-        
-        draw()
-
-        if current != start:
-            current.make_closed()
-        ite_count += 1
+   
     return False
 
 
