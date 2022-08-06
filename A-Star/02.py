@@ -1,4 +1,5 @@
 from ast import Lambda
+import random
 import re
 from turtle import width
 import pygame
@@ -109,6 +110,7 @@ def wait():
         
 
 def algorithm(draw, grid, start, end):
+    # pseudocode https://en.wikipedia.org/wiki/A*_search_algorithm#:~:text=x).-,Pseudocode,-%5Bedit%5D
     draw()
     count = 0
     open_set = PriorityQueue()
@@ -273,7 +275,13 @@ def main(win, width):
                             if node.color != WHITE:
                                 if not node.is_start() and not node.is_end() and not node.is_barrier():
                                     node.color = WHITE
-
+                if e.key == pygame.K_r:
+                    for row in grid:
+                        for node in row:
+                            if random.randint(0,100) < 20:
+                                node.color = BLACK
+                                
+                            
     pygame.quit()
 
 main(win, 800)
