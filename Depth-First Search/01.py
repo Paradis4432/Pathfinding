@@ -1,10 +1,12 @@
 from ast import Lambda
+from itertools import count
 import random
 import re
 from turtle import width
 import pygame
 import math
 from queue import PriorityQueue
+import sys
 
 win = pygame.display.set_mode((800,800))
 
@@ -108,9 +110,25 @@ def wait():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_n or pygame.key.get_pressed()[pygame.K_n]:
                 return
         
-
+visited = []
+came_from = {}
 def algorithm(draw, grid, start, end):
-   
+    draw()
+        
+    # wait()
+    visited.append(start)
+    # print(visited)
+
+    if start == end:
+        rebuild_path(came_from, end, draw)
+        wait()
+        sys.exit()
+
+    for nei in start.neighbors:
+        if nei not in visited:
+            nei.make_open()
+            came_from[nei] = start
+            algorithm(draw, grid, nei, end)
     return False
 
 
@@ -136,8 +154,8 @@ def draw_grid(win, rows, width):
 
         for j in range(rows):
             pygame.draw.line(win, GREY, (j * gap, 0), (j * gap, width))
-            text = font.render(str(i) + ":" + str(j), True, BLUE)
-            win.blit(text, (i * gap, j * gap))
+            #text = font.render(str(i) + ":" + str(j), True, BLUE)
+            #win.blit(text, (i * gap, j * gap))
 
 
 def draw(win, grid, rows, width):
@@ -160,7 +178,7 @@ def get_clicked_pos(pos, rows, width):
     return row, col
 
 def main(win, width):
-    ROWS = 15
+    ROWS = 80
     grid = make_grid(ROWS, width)
 
     start = None
