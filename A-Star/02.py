@@ -127,7 +127,7 @@ def algorithm(draw, grid, start, end):
     ite_count = 0
 
     while not open_set.empty():
-        print("\n" + "-" * 20 + "iteration: " + str(ite_count) + "-" * 20 + "\n")
+        # print("\n" + "-" * 20 + "iteration: " + str(ite_count) + "-" * 20 + "\n")
         #wait()
         current = open_set.get()[2]
         open_set_hash.remove(current)
@@ -137,25 +137,25 @@ def algorithm(draw, grid, start, end):
             return True
 
         for nei in current.neighbors:
-            print("\nROW:COL : " + str(nei.row) + ":" + str(nei.col))
+            # print("\nROW:COL : " + str(nei.row) + ":" + str(nei.col))
             temp_g_score = g_score[current] + 1
-            print("temp_g_score: " + str(temp_g_score))
-            print("g_score[nei]: " + str(g_score[nei]))
+            # print("temp_g_score: " + str(temp_g_score))
+            # print("g_score[nei]: " + str(g_score[nei]))
             if temp_g_score < g_score[nei]:
                 came_from[nei] = current
                 g_score[nei] = temp_g_score
                 f_score[nei] = temp_g_score + h(nei.get_pos(), end.get_pos())
-                print("\ttemp_g_score < g_score[nei]")
-                print("\th(nei.get_pos(), end.get_pos()): " + str(h(nei.get_pos(), end.get_pos())))
-                print("\tg_score[nei]: " + str(g_score[nei]))
-                print("\tf_score[nei]: " + str(f_score[nei]))
+                # print("\ttemp_g_score < g_score[nei]")
+                # print("\th(nei.get_pos(), end.get_pos()): " + str(h(nei.get_pos(), end.get_pos())))
+                # print("\tg_score[nei]: " + str(g_score[nei]))
+                # print("\tf_score[nei]: " + str(f_score[nei]))
                 if nei not in open_set_hash:
-                    print("\t\tnei not in open_set_hash")
+                    # print("\t\tnei not in open_set_hash")
                     count += 1
                     open_set.put((f_score[nei], count, nei))
                     open_set_hash.add(nei)
                     nei.make_open()
-                    print("\t\tmade nei open")
+                    # print("\t\tmade nei open")
         
         draw()
 
@@ -187,8 +187,8 @@ def draw_grid(win, rows, width):
 
         for j in range(rows):
             pygame.draw.line(win, GREY, (j * gap, 0), (j * gap, width))
-            text = font.render(str(i) + ":" + str(j), True, BLUE)
-            win.blit(text, (i * gap, j * gap))
+            #text = font.render(str(i) + ":" + str(j), True, BLUE)
+            #win.blit(text, (i * gap, j * gap))
 
 
 def draw(win, grid, rows, width):
@@ -211,7 +211,7 @@ def get_clicked_pos(pos, rows, width):
     return row, col
 
 def main(win, width):
-    ROWS = 15
+    ROWS = 80
     grid = make_grid(ROWS, width)
 
     start = None

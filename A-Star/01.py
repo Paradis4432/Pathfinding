@@ -187,7 +187,7 @@ def get_clicked_pos(pos, rows, width):
     return row, col
 
 def main(win, width):
-    ROWS = 50
+    ROWS = 80
     grid = make_grid(ROWS, width)
 
     start = None
