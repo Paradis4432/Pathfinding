@@ -108,9 +108,25 @@ def wait():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_n or pygame.key.get_pressed()[pygame.K_n]:
                 return
         
-
+visited = []
+que = []
+came_from = {}
 def algorithm(draw, grid, start, end):
-    
+    draw()
+
+    visited.append(start)
+    que.append(start)
+
+    while que:
+        x = que.pop(0)
+        print(x)
+        for nei in grid[x.col][x.row].neighbors:
+            if nei not in visited:
+                visited.append(nei)
+                que.append(nei)
+                nei.make_open()
+                came_from[nei] = start
+
     return False
 
 
