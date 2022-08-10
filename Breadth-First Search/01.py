@@ -117,10 +117,17 @@ def algorithm(draw, grid, start, end):
     visited.append(start)
     que.append(start)
 
+    start.make_open()
+
     while que:
+        
         x = que.pop(0)
-        print(x)
-        for nei in grid[x.col][x.row].neighbors:
+
+        if x == end:
+            rebuild_path(came_from, end, draw)
+            return True
+
+        for nei in x.neighbors:
             if nei not in visited:
                 visited.append(nei)
                 que.append(nei)

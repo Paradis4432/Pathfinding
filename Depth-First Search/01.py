@@ -115,7 +115,7 @@ came_from = {}
 def algorithm(draw, grid, start, end):
     draw()
         
-    # wait()
+    wait()
     visited.append(start)
     # print(visited)
 
@@ -126,7 +126,7 @@ def algorithm(draw, grid, start, end):
 
     for nei in start.neighbors:
         if nei not in visited:
-            nei.make_open()
+            nei.make_open() 
             came_from[nei] = start
             algorithm(draw, grid, nei, end)
     return False
@@ -178,7 +178,7 @@ def get_clicked_pos(pos, rows, width):
     return row, col
 
 def main(win, width):
-    ROWS = 80
+    ROWS = 20
     grid = make_grid(ROWS, width)
 
     start = None
